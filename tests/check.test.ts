@@ -56,6 +56,7 @@ describe("scanImports", () => {
     expect(items[0].name).toBe("next/font/google");
     expect(items[0].status).toBe("partial");
     expect(items[0].detail).toContain("statically analyzable");
+    expect(items[0].detail).toContain("fall back to CDN");
   });
 
   it("reports accurate next/image detail", () => {
