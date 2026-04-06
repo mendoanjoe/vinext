@@ -39,7 +39,11 @@ export type CheckResult = {
 const IMPORT_SUPPORT: Record<string, { status: Status; detail?: string }> = {
   next: { status: "supported", detail: "type-only exports (Metadata, NextPage, etc.)" },
   "next/link": { status: "supported" },
-  "next/image": { status: "supported", detail: "uses @unpic/react (no local optimization yet)" },
+  "next/image": {
+    status: "supported",
+    detail:
+      "remotePatterns/domains validation + local /_vinext/image runtime optimization (no build-time image optimization)",
+  },
   "next/legacy/image": {
     status: "supported",
     detail: "pre-Next.js 13 Image API with layout prop; translated to modern Image",
@@ -61,7 +65,8 @@ const IMPORT_SUPPORT: Record<string, { status: Status; detail?: string }> = {
   "next/script": { status: "supported" },
   "next/font/google": {
     status: "partial",
-    detail: "fonts loaded from CDN, not self-hosted at build time",
+    detail:
+      "build-time self-hosting for statically analyzable calls; dynamic patterns may fall back to CDN",
   },
   "next/font/local": {
     status: "supported",
@@ -145,9 +150,13 @@ const CONFIG_SUPPORT: Record<string, { status: Status; detail?: string }> = {
   redirects: { status: "supported" },
   rewrites: { status: "supported" },
   headers: { status: "supported" },
-  i18n: { status: "supported", detail: "path-prefix routing; domain routing for Pages Router" },
+  i18n: { status: "supported", detail: "path-prefix routing; domain routing supported in Pages Router" },
   env: { status: "supported" },
-  images: { status: "partial", detail: "remotePatterns validated, no local optimization" },
+  images: {
+    status: "partial",
+    detail:
+      "remotePatterns/domains + runtime optimization config supported; build-time image optimization is not implemented",
+  },
   allowedDevOrigins: { status: "supported", detail: "dev server cross-origin allowlist" },
   output: {
     status: "supported",
@@ -166,7 +175,7 @@ const CONFIG_SUPPORT: Record<string, { status: Status; detail?: string }> = {
   },
   "i18n.domains": {
     status: "partial",
-    detail: "supported for Pages Router; App Router unchanged",
+    detail: "supported for Pages Router; App Router domain-routing parity is incomplete",
   },
   reactStrictMode: { status: "supported", detail: "always enabled" },
   poweredByHeader: {

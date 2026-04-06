@@ -55,6 +55,17 @@ describe("scanImports", () => {
     expect(items).toHaveLength(1);
     expect(items[0].name).toBe("next/font/google");
     expect(items[0].status).toBe("partial");
+    expect(items[0].detail).toContain("statically analyzable");
+  });
+
+  it("reports accurate next/image detail", () => {
+    writeFile("app/page.tsx", `import Image from "next/image";`);
+
+    const items = scanImports(tmpDir);
+    expect(items).toHaveLength(1);
+    expect(items[0].name).toBe("next/image");
+    expect(items[0].status).toBe("supported");
+    expect(items[0].detail).toContain("/_vinext/image");
   });
 
   it("reports accurate next/font/local detail", () => {
@@ -316,6 +327,7 @@ describe("analyzeConfig", () => {
 
     const items = analyzeConfig(tmpDir);
     expect(items.find((i) => i.name === "images")?.status).toBe("partial");
+    expect(items.find((i) => i.name === "images")?.detail).toContain("runtime optimization");
   });
 
   it("detects experimental.ppr as unsupported", () => {
@@ -373,6 +385,7 @@ describe("analyzeConfig", () => {
     const items = analyzeConfig(tmpDir);
     expect(items.find((i) => i.name === "i18n")?.status).toBe("supported");
     expect(items.find((i) => i.name === "i18n.domains")?.status).toBe("partial");
+    expect(items.find((i) => i.name === "i18n.domains")?.detail).toContain("App Router");
   });
 
   it("reads next.config.ts files", () => {

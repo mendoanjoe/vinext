@@ -3975,6 +3975,14 @@ describe("generateRscEntry ISR code generation", () => {
     expect(code).toContain("const __pageBuildResult = await __buildAppPageElement({");
   });
 
+  it("generated code warns once per route when runtime/preferredRegion are ignored", () => {
+    const code = generateRscEntry("/tmp/test/app", minimalRoutes);
+    expect(code).toContain("const __ignoredRouteSegmentConfigWarnings = new Set();");
+    expect(code).toContain('Route segment config on "${routePattern}" is accepted but currently ignored');
+    expect(code).toContain("runtimeConfig = route.page?.runtime");
+    expect(code).toContain("preferredRegionConfig = route.page?.preferredRegion");
+  });
+
   it("generated code delegates page boundary rendering to typed helpers", () => {
     const code = generateRscEntry("/tmp/test/app", minimalRoutes);
     expect(code).toContain("renderAppPageErrorBoundary as __renderAppPageErrorBoundary");

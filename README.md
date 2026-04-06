@@ -437,7 +437,7 @@ Every `next/*` import is shimmed to a Vite-compatible implementation.
 | `next/headers`      | ✅  | Async `headers()`, `cookies()`, `draftMode()`                                                                                          |
 | `next/dynamic`      | ✅  | `ssr: true`, `ssr: false`, `loading` component                                                                                         |
 | `next/script`       | ✅  | All 4 strategies (`beforeInteractive`, `afterInteractive`, `lazyOnload`, `worker`)                                                     |
-| `next/font/google`  | 🟡  | Runtime CDN loading. No self-hosting, font subsetting, or fallback metrics                                                             |
+| `next/font/google`  | 🟡  | Build-time self-hosting for statically analyzable font calls. Dynamic patterns may fall back to CDN. No full Next.js-style subsetting/fallback metrics |
 | `next/font/local`   | 🟡  | Runtime `@font-face` injection. Not extracted at build time                                                                            |
 | `next/og`           | ✅  | OG image generation via `@vercel/og` (Satori + resvg)                                                                                  |
 | `next/cache`        | ✅  | `revalidateTag`, `revalidatePath`, `unstable_cache`, pluggable `CacheHandler`, `"use cache"` with `cacheLife()` and `cacheTag()`       |
@@ -464,7 +464,7 @@ Every `next/*` import is shimmed to a Vite-compatible implementation.
 | Intercepting routes              | ✅  | `(.)`, `(..)`, `(..)(..)`, `(...)` conventions                                                                     |
 | Route handlers (`route.ts`)      | ✅  | Named HTTP methods, auto OPTIONS/HEAD, cookie attachment                                                           |
 | Middleware                       | ✅  | `middleware.ts` and `proxy.ts` (Next.js 16). Matcher patterns (string, array, regex, `:param`, `:path*`, `:path+`) |
-| i18n routing                     | 🟡  | Pages Router locale prefix, Accept-Language detection, NEXT_LOCALE cookie. No domain-based routing                 |
+| i18n routing                     | 🟡  | Pages Router locale prefix, Accept-Language detection, NEXT_LOCALE cookie, and domain routing. App Router domain parity is incomplete |
 | `basePath`                       | ✅  | Applied everywhere — URLs, Link, Router, navigation hooks                                                          |
 | `trailingSlash`                  | ✅  | 308 redirects to canonical form                                                                                    |
 
@@ -498,7 +498,7 @@ Every `next/*` import is shimmed to a Vite-compatible implementation.
 | `next.config.js` / `.ts` / `.mjs`                | ✅  | Function configs, phase argument                                                                                                                                                                                       |
 | `rewrites` / `redirects` / `headers`             | ✅  | All phases, param interpolation                                                                                                                                                                                        |
 | Environment variables (`.env*`, `NEXT_PUBLIC_*`) | ✅  | Auto-loads Next.js-style dotenv files; only public vars are inlined                                                                                                                                                    |
-| `images` config                                  | 🟡  | Parsed but not used for optimization                                                                                                                                                                                   |
+| `images` config                                  | 🟡  | `remotePatterns`/`domains` validation + runtime optimizer config (`deviceSizes`, `imageSizes`, `dangerouslyAllowSVG`, security headers). No build-time image optimization |
 | `experimental.optimizePackageImports`            | ✅  | Rewrites barrel imports to direct sub-module imports in RSC/SSR environments. A default set (lucide-react, date-fns, radix-ui, antd, MUI, and others) are always optimized. Add package names here to extend the list. |
 | `vinext({ nextConfig })`                         | ✅  | Inline Next-style config from `vite.config.*`. Supports object-form and function-form config. When provided, this overrides root `next.config.*`.                                                                      |
 

@@ -720,6 +720,7 @@ const routes = [
 ${routeEntries.join(",\n")}
 ];
 const _routeTrie = _buildRouteTrie(routes);
+const __ignoredRouteSegmentConfigWarnings = new Set();
 
 const metadataRoutes = [
 ${metaRouteEntries.join(",\n")}
@@ -2022,6 +2023,19 @@ async function _handleRequest(request, __reqCtx, _mwCtx) {
   let revalidateSeconds = typeof route.page?.revalidate === "number" ? route.page.revalidate : null;
   const dynamicConfig = route.page?.dynamic; // 'auto' | 'force-dynamic' | 'force-static' | 'error'
   const dynamicParamsConfig = route.page?.dynamicParams; // true (default) | false
+  const runtimeConfig = route.page?.runtime;
+  const preferredRegionConfig = route.page?.preferredRegion;
+  if (runtimeConfig !== undefined || preferredRegionConfig !== undefined) {
+    const routePattern = route.pattern || "<unknown>";
+    const warningKey = \`\${routePattern}|runtime=\${String(runtimeConfig)}|preferredRegion=\${String(preferredRegionConfig)}\`;
+    if (!__ignoredRouteSegmentConfigWarnings.has(warningKey)) {
+      __ignoredRouteSegmentConfigWarnings.add(warningKey);
+      console.warn(
+        \`[vinext] Route segment config on "\${routePattern}" is accepted but currently ignored: \` +
+          \`runtime=\${String(runtimeConfig)}, preferredRegion=\${String(preferredRegionConfig)}\`,
+      );
+    }
+  }
   const isForceStatic = dynamicConfig === "force-static";
   const isDynamicError = dynamicConfig === "error";
 
